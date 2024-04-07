@@ -15,9 +15,9 @@ from natsort import natsorted
 def cleanshows(season, extension, showname, directory):
     
     files = natsorted(os.listdir(r"{}".format(directory)))
-    con = sqlite3.connect(f"{showname}.db")
+    con = sqlite3.connect(":memory:")
     cur = con.cursor()
-    cur.execute(f"CREATE TABLE IF NOT EXISTS Season_{season}(OldName TEXT, NewName TEXT, Season TEXT)")
+    cur.execute(f"CREATE TABLE IF NOT EXISTS Log(OldName TEXT, NewName TEXT)")
 
     for i in  range(len(files)):
             
@@ -32,14 +32,14 @@ def cleanshows(season, extension, showname, directory):
         
         os.rename(os.path.join(directory, filename), 
                 os.path.join(directory, new))
-        cur.execute(f"INSERT INTO Season_{season} VALUES(?,?,?)",(filename,new,season))
+        cur.execute(f"INSERT INTO Log VALUES(?,?)",(filename,new))
         
         print(HTML(f"<ansired>Renamed</ansired><skyblue> {filename}</skyblue><ansired> to</ansired><seagreen> {new}</seagreen>"))
             
 
         
     con.commit()
-    con.close()
+    
 
 
 
@@ -90,14 +90,15 @@ def main():
         assert result in ["y","yes","n","no"], "Please enter a valid response."
         
         if result == "y" or result == "yes":
-                con = sqlite3.connect(f"{showname}.db")
+                con = sqlite3.connect(f":memory:")
                 cur = con.cursor()
-                for row in cur.execute(f"SELECT OldName, NewName FROM Season_{season}"):
+                for row in cur.execute(f"SELECT OldName, NewName FROM Log"):
 
                     os.rename(os.path.join(directory, row[1]), 
                         os.path.join(directory, row[0]))
                 con.close()
         print(HTML("<seagreen>Complete!</seagreen>"))
+        con.close()
         sys.exit()
 
 if __name__ == "__main__":
