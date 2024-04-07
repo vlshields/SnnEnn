@@ -39,6 +39,7 @@ def cleanshows(season, extension, showname, directory):
 
         
     con.commit()
+    return con
     
 
 
@@ -84,19 +85,19 @@ def main():
                         )
         if showname == "q" or directory == "quit":
             sys.exit()
-        cleanshows(season, extension, showname, directory)
+        con = cleanshows(season, extension, showname, directory)
 
         result = session.prompt("Would you like to Undo? [y]es,[n]o: ")
         assert result in ["y","yes","n","no"], "Please enter a valid response."
         
         if result == "y" or result == "yes":
-                con = sqlite3.connect(f":memory:")
-                cur = con.cursor()
-                for row in cur.execute(f"SELECT OldName, NewName FROM Log"):
+    
+            cur = con.cursor()
+            for row in cur.execute(f"SELECT OldName, NewName FROM Log"):
 
-                    os.rename(os.path.join(directory, row[1]), 
-                        os.path.join(directory, row[0]))
-                con.close()
+                os.rename(os.path.join(directory, row[1]), 
+                    os.path.join(directory, row[0]))
+            con.close()
         print(HTML("<seagreen>Complete!</seagreen>"))
         con.close()
         sys.exit()
