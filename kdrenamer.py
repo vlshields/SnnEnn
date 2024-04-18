@@ -74,7 +74,7 @@ def main():
         if extension == "q" or directory == "quit":
             sys.exit()
         
-        assert extension in [".mkv",".mp4"], "Please enter a valid file extension."
+        assert extension in [".mkv",".mp4",".avi"], "Please enter a valid file extension."
         
         showname = session.prompt("Enter the name of the show: ", 
                         )
