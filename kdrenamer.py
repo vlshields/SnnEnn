@@ -1,7 +1,7 @@
 import os
 import sys
 import art
-from prompt_toolkit.shortcuts import prompt,yes_no_dialog
+from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.styles import style_from_pygments_cls, Style
 from prompt_toolkit import HTML, PromptSession
 from prompt_toolkit import print_formatted_text as print
@@ -41,11 +41,6 @@ def cleanshows(season, extension, showname, directory):
     con.commit()
     return con
     
-
-
-
-
-
 
 def main():
 
